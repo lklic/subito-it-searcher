@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tracking Configuration</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function fillEditForm(name, url, minPrice, maxPrice) {
+            document.getElementById('name').value = name;
+            document.getElementById('url').value = url;
+            document.getElementById('minPrice').value = minPrice;
+            document.getElementById('maxPrice').value = maxPrice;
+            window.scrollTo(0, 0); // Scroll to top to show the form
+        }
+    </script>
+</head>
+<body>
+    <h1>Tracking Configuration</h1>
+
+    <h2>Add / Update Tracking</h2>
+    <form method="post" action="/add_tracking">
+        <input type="text" id="name" name="name" placeholder="Name" required>
+        <input type="text" id="url" name="url" placeholder="URL" required>
+        <input type="number" id="minPrice" name="minPrice" placeholder="Min Price">
+        <input type="number" id="maxPrice" name="maxPrice" placeholder="Max Price">
+        <button type="submit">Add/Update</button>
+    </form>
+
+    <h2>Current Trackings</h2>
+    <table>
+        <!-- Table Headers -->
+        <tr>
+            <th>Name</th>
+            <th>URL</th>
+            <th>Min Price</th>
+            <th>Max Price</th>
+            <th>Actions</th>
+        </tr>
+        <!-- Table Rows -->
+        {% for name, urls in trackings.items() %}
+            {% for url, price_ranges in urls.items() %}
+                {% for min_price, max_prices in price_ranges.items() %}
+                    {% for max_price in max_prices %}
+                        <tr>
+                            <td>{{ name }}</td>
+                            <td><a href="{{ url }}" target="_blank">{{ url }}</a></td>
+                            <td>{{ min_price }}</td>
+                            <td>{{ max_price }}</td>
+                            <td>
+                                <button onclick="fillEditForm('{{ name }}', '{{ url }}', '{{ min_price }}', '{{ max_price }}')" class="action-button edit-button">Edit</button>
+                                <a href="/delete_tracking/{{ name }}" class="action-button delete-button">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+    </table>
+
+    <h2>Update Telegram Configuration</h2>
+    <form method="post" action="/update_config">
+        <input type="text" name="token" placeholder="Token" value="{{ api_credentials.token }}" required>
+        <input type="text" name="chatId" placeholder="Chat ID" value="{{ api_credentials.chatid }}" required>
+        <button type="submit">Update Config</button>
+    </form>
+</body>
+</html>

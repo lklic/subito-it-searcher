@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5002:5000"
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - FLASK_ENV=development
+
+  searcher:
+    build: .
+    command: python3 subito-searcher.py --daemon
+    volumes:
+      - .:/usr/src/app
