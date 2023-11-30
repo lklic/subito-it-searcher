@@ -4,9 +4,10 @@ services:
   web:
     build: .
     ports:
-      - "5002:5000"
+      - "5001:5000"
     volumes:
-      - .:/usr/src/app
+      - .:/usr/src/app  # Mounts the entire application directory
+      - persistent-data:/usr/src/app  # Persistent volume for shared data
     environment:
       - FLASK_ENV=development
 
@@ -14,4 +15,8 @@ services:
     build: .
     command: python3 subito-searcher.py --daemon
     volumes:
-      - .:/usr/src/app
+      - .:/usr/src/app  # Mounts the entire application directory
+      - persistent-data:/usr/src/app  # Persistent volume for shared data
+
+volumes:
+  persistent-data:
